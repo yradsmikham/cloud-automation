@@ -163,6 +163,22 @@ spec:
             readOnly: true
             mountPath: "/fence/jwt-keys.tar"
             subPath: "jwt-keys.tar"
+          - name: "fenceshib-secret"
+            readOnly: true
+            mountPath: "/etc/shibboleth/shibboleth2.xml"
+            subPath: "shibboleth2.xml"
+          - name: "fenceshib-secret"
+            readOnly: true
+            mountPath: "/etc/ssl/private/incommon-login.bionimbus.org.key"
+            subPath: "incommon-login.bionimbus.org.key"
+          - name: "fenceshib-secret"
+            readOnly: true
+            mountPath: "/etc/ssl/certs/incommon-login.bionimbus.org.crt"
+            subPath: "incommon-login.bionimbus.org.crt"
+          - name: "fenceshib-secret"
+            readOnly: true
+            mountPath: "/etc/shibboleth/inc-md-cert.pem"
+            subPath: "inc-md-cert.pem"
         resources:
             limits:
               cpu: 0.3
