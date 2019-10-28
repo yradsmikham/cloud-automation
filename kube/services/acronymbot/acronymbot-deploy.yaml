@@ -1,0 +1,41 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: acronymbot-deployment
+spec:
+  selector:
+    # Only select pods based on the 'app' label
+    matchLabels:
+      app: acronymbot
+  revisionHistoryLimit: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: acronymbot
+        GEN3_DATE_LABEL
+    spec:
+      volumes:
+        - name: myslacktoken
+          secret:
+            secretName: "acronymbot-secret"
+      containers:
+        - name: acronymbot
+          GEN3_ACRONYMBOT_IMAGE
+          env:
+          - name: SLACK_TOKEN
+            valueFrom:
+            secretKeyRef:
+              name: myslacktoken
+              key: slack_token
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: 1
+            limits:
+              cpu: 2
+              memory: 512Mi
