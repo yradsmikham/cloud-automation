@@ -19,23 +19,26 @@ spec:
         app: acronymbot
         GEN3_DATE_LABEL
     spec:
-      volumes:
-        - name: myslacktoken
-          secret:
-            secretName: "acronymbot-secret"
       containers:
-        - name: acronymbot
-          GEN3_ACRONYMBOT_IMAGE
-          env:
-          - name: SLACK_TOKEN
-            valueFrom:
+      - name: acronymbot
+        GEN3_ACRONYMBOT_IMAGE
+        env:
+        - name: SLACK_API_TOKEN
+          valueFrom:
             secretKeyRef:
-              name: myslacktoken
-              key: slack_token
-          imagePullPolicy: Always
-          resources:
-            requests:
-              cpu: 1
-            limits:
-              cpu: 2
-              memory: 512Mi
+              name: acronymbot-g3auto
+              key: 'slacktoken.json'
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: 1
+          limits:
+            cpu: 2
+            memory: 512Mi
+        volumeMounts:
+        - name: slacktoken
+          mountPath: "/secret/slacktoken.json"
+      volumes:
+      - name: slacktoken
+        secret:
+          secretName: acronymbot-g3auto
