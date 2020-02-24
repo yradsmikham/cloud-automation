@@ -5,7 +5,7 @@
 #    so just use bourn shell ...
 
 #
-# Update certificate authority index -
+# Update certificate authority index-
 # environment may have mounted more authorities
 # - ex: /usr/local/share/ca-certificates/cdis-ca.crt into system bundle       
 #
