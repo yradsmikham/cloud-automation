@@ -1,0 +1,61 @@
+# used ssjdispatcher deployment spec as a base
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: redis-deployment
+  annotations:
+    gen3.io/network-ingress: "fence,presigned-url-fence,fenceshib,sheepdog,indexd"
+spec:
+  selector:
+    # Only select pods based on the 'app' label
+    matchLabels:
+      app: redis
+  revisionHistoryLimit: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: redis
+        release: test
+        public: "yes"
+        GEN3_DATE_LABEL
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - redis
+              topologyKey: "kubernetes.io/hostname"
+      automountServiceAccountToken: false
+      containers:
+      - name: redis
+        image: redis:5.0.8
+        command:
+          - redis-server
+          - "/redis-master/redis.conf"
+        env:
+        - name: MASTER
+          value: "true"
+        ports:
+        - containerPort: 6379
+        volumeMounts:
+        - mountPath: /redis-master-data
+          name: data
+        - mountPath: /redis-master
+          name: config-volume
+      volumes:
+        - name: data
+          emptyDir: {}
+        - name: config-volume
+          secret:
+            secretName: "redis-g3auto"
