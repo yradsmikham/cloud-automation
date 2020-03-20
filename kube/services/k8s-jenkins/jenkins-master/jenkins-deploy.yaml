@@ -1,12 +1,12 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: jenkins-deployment
+  name: k8s-jenkins-master-deployment
 spec:
   selector:
     # Only select pods based on the 'app' label
     matchLabels:
-      app: jenkins
+      app: k8s-jenkins-master
   revisionHistoryLimit: 2
   strategy:
     #
@@ -17,7 +17,7 @@ spec:
   template:
     metadata:
       labels:
-        app: jenkins
+        app: k8s-jenkins-master
         # for network policy
         netnolimit: "yes"
         GEN3_DATE_LABEL
@@ -31,7 +31,7 @@ spec:
       # See for details on running docker in a pod:
       #   https://estl.tech/accessing-docker-from-a-kubernetes-pod-68996709c04b
       #
-      - name: jenkins
+      - name: k8s-jenkins-master
         GEN3_JENKINS_IMAGE
         ports:
         - containerPort: 8080
