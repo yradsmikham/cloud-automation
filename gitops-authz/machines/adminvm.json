@@ -1,0 +1,16 @@
+{
+  "name": "adminvm",
+  "description": "generic prod admin vm",
+  "authorized-keys": [
+    {
+      "pattern": "/home/ubuntu/",
+      "groups": ["devops"],
+      "users": []
+    },
+    {
+      "pattern": "/home/",
+      "groups": ["devops"],
+      "users": ["fantix@uchicago.edu"]
+    }
+  ]
+}

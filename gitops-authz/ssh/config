@@ -1,0 +1,203 @@
+Host admin.csoc
+   ServerAliveInterval 120
+   HostName 10.128.2.252
+   User ubuntu
+   ForwardAgent yes
+
+Host cdistest.csoc
+   ServerAliveInterval 120
+   Hostname 10.128.7.28
+   User ubuntu
+   ForwardAgent yes
+
+Host cdistest_dev.csoc
+   ServerAliveInterval 120
+   Hostname 10.128.7.28
+   User ubuntu
+   ForwardAgent yes
+
+Host dcfprod.csoc
+   ServerAliveInterval 120
+   HostName 10.128.2.109
+   User ubuntu
+   ForwardAgent yes
+
+Host dcfqa.csoc
+   ServerAliveInterval 120
+   HostName 10.128.2.138
+   User ubuntu
+   ForwardAgent yes
+
+Host braincommons.csoc
+   ServerAliveInterval 120
+   HostName 10.128.2.81
+   User ubuntu
+   ForwardAgent yes
+
+Host oadc.csoc
+   ServerAliveInterval 120
+   HostName 10.128.2.191
+   User ubuntu
+   ForwardAgent yes
+
+Host occ.csoc
+   ServerAliveInterval 120
+   HostName 10.128.2.64
+   User ubuntu
+   ForwardAgent yes
+
+Host gtex.csoc
+   ServerAliveInterval 120
+   HostName 10.128.2.246
+   User ubuntu
+   ForwardAgent yes
+
+Host niaiddh.csoc
+   ServerAliveInterval 120
+   HostName 10.128.2.156
+   User ubuntu
+   ForwardAgent yes
+
+Host kf.csoc
+   ServerAliveInterval 120
+   HostName 10.128.2.170
+   User ubuntu
+   ForwardAgent yes
+
+Host occ-edc.csoc
+   ServerAliveInterval 120
+   HostName 10.128.2.147
+   User ubuntu
+   ForwardAgent yes
+   
+Host ibdgc.csoc
+   ServerAliveInterval 120
+   HostName 10.128.2.89
+   User ubuntu
+   ForwardAgent yes
+
+# DCF Sandbox commons / CRDC Demo
+Host ncigdc.csoc
+   ServerAliveInterval 120
+   HostName 10.128.2.112
+   User ubuntu
+   ForwardAgent yes
+
+Host vadc.csoc
+   ServerAliveInterval 120
+   HostName 10.128.2.165
+   User ubuntu
+   ForwardAgent yes
+
+HOST admin.dev-commons
+   ServerAliveInterval 120
+   #old - Hostname 35.232.18.8
+   Hostname 35.224.29.186
+   User ubuntu
+   ForwardAgent yes
+
+Host account.csoc
+   ServerAliveInterval 120
+   HostName 10.128.2.245
+   User ubuntu
+   ForwardAgent yes
+
+# DCF-Interop with Kids First
+# https://dcf-interop.kidsfirstdrc.org/
+Host gmkfqa.csoc
+   ServerAliveInterval 120
+   Hostname 10.128.2.12
+   User ubuntu
+   ForwardAgent yes
+
+Host genomel.csoc
+   ServerAliveInterval 120
+   Hostname 10.128.2.173
+   User ubuntu
+   ForwardAgent yes
+
+# DCF Sandbox commons / CRDC Demo
+# https://nci-crdc-demo.datacommons.io/
+Host ncicrdc.csoc
+   ServerAliveInterval 120
+   HostName 10.128.2.131
+   User ubuntu
+   ForwardAgent yes
+
+# Cohen Veterans Biosciences Commons
+# https://cvbcommons.org/
+Host cvbcommons.csoc
+   ServerAliveInterval 120
+   Hostname 10.128.2.247
+   User ubuntu
+   ForwardAgent yes
+
+# Anvil Commons
+# http://www.theanvil.io/
+Host anvil.csoc
+   ServerAliveInterval 120
+   Hostname 10.128.2.243
+   User ubuntu
+   ForwardAgent yes
+
+# Account hosting DCF GDC data on AWS
+Host dcfbuckets.csoc
+   ServerAliveInterval 120
+   Hostname 10.128.2.181
+   User ubuntu
+   ForwardAgent yes
+
+Host esproxy
+   ServerAliveInterval 120
+   Hostname 10.128.7.8
+   User ubuntu
+   ForwardAgent yes
+
+Host esproxy2
+   ServerAliveInterval 120
+   Hostname 10.128.7.23
+   User ubuntu
+   ForwardAgent yes
+
+# Canine Commons
+# https://caninedc.org/
+Host canine.csoc
+   ServerAliveInterval 120
+   Hostname 10.128.2.34
+   User ubuntu
+   ForwardAgent yes
+
+Host covid19.csoc
+   ServerAliveInterval 120
+   Hostname 10.128.2.13
+   User ubuntu
+   ForwardAgent yes
+
+Host jcoin.csoc
+   ServerAliveInterval 120
+   Hostname 10.128.2.57
+   User ubuntu
+   ForwardAgent yes
+
+Host occ-dev.csoc
+   ServerAliveInterval 120
+   Hostname 10.128.2.124
+   User ubuntu
+   ForwardAgent yes
+
+Host vhdc.csoc
+   ServerAliveInterval 120
+   Hostname 10.128.2.42
+   User ubuntu
+   ForwardAgent yes
+
+HOST prodvpn
+   ServerAliveInterval 120
+   Hostname csoc-prod-vpn.planx-pla.net
+   User ubuntu
+   ForwardAgent yes
+
+HOST devvpn
+   ServerAliveInterval 120
+   Hostname csoc-dev-vpn.planx-pla.net
+   User ubuntu

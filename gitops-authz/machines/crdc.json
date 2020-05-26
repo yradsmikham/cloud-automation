@@ -1,0 +1,16 @@
+{
+  "name": "crdc",
+  "description": "crdc admin vm",
+  "authorized-keys": [
+    {
+      "pattern": "/home/ubuntu",
+      "groups": ["devops"],
+      "users": []
+    },
+    {
+      "pattern": "/home/",
+      "groups": ["devops", "crdc-admin"],
+      "users": []
+    }
+  ]
+}

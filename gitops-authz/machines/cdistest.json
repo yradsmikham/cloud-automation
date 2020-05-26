@@ -1,0 +1,31 @@
+{
+  "name": "cdistest",
+  "description": "dev/qa admin vm",
+  "authorized-keys": [
+    {
+      "pattern": "/home/ubuntu/",
+      "groups": ["devops"],
+      "users": []
+    },
+    {
+      "pattern": "/home/devplanetv1/",
+      "groups": ["devops"],
+      "users": []
+    },
+    {
+      "pattern": "/home/qaplanetv1/",
+      "groups": ["devops", "qa"],
+      "users": []
+    },
+    {
+      "pattern": "/home/jenkins",
+      "groups": ["devops", "qa"],
+      "users": []
+    },
+    {
+      "pattern": "/home/",
+      "groups": ["devops", "devs", "qa"],
+      "users": []
+    }
+  ]
+}

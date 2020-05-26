@@ -1,0 +1,16 @@
+{
+  "name": "covid",
+  "description": "covid admin vm",
+  "authorized-keys": [
+    {
+      "pattern": "/home/ubuntu",
+      "groups": ["devops"],
+      "users": []
+    },
+    {
+      "pattern": "/home/",
+      "groups": ["devops", "covid-admin"],
+      "users": []
+    }
+  ]
+}

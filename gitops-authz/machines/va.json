@@ -1,0 +1,16 @@
+{
+  "name": "va",
+  "description": "va admin vm",
+  "authorized-keys": [
+    {
+      "pattern": "/home/ubuntu",
+      "groups": ["devops"],
+      "users": []
+    },
+    {
+      "pattern": "/home/",
+      "groups": ["devops", "va-admin"],
+      "users": []
+    }
+  ]
+}
