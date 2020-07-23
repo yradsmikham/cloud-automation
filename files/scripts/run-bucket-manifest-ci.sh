@@ -3,7 +3,7 @@
 # Maintenance restart for the Selenium Hub & Nodes.
 #
 # vpc_name="qaplanetv2"
-# 52   1   *   *   *    (if [ -f $HOME/cloud-automation/files/scripts/run-bucket-manifest-ci.sh ]; then bash $HOME/cloud-automation/files/scripts/run-bucket-manifest-ci.sh; else echo "no run-bucket-manifest-ci.sh"; fi) > $HOME/run-bucket-manifest-ci.sh.log 2>&1
+#  0   20  *   *   *   (if [ -f $HOME/cloud-automation/files/scripts/run-bucket-manifest-ci.sh ]; then bash $HOME/cloud-automation/files/scripts/run-bucket-manifest-ci.sh; else echo "no run-bucket-manifest-ci.sh"; fi) > $HOME/run-bucket-manifest-ci.sh.log 2>&1
 
 export GEN3_HOME="$HOME/cloud-automation"
 export vpc_name="${vpc_name:-"qaplanetv2"}"
