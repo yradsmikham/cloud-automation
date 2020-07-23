@@ -63,5 +63,5 @@ if [ $RC != 0 ]; then
   curl -X POST --data-urlencode "payload={\"channel\": \"#test-bots\", \"username\": \"bucket-manifest-ci\", \"text\": \"The Bucket Manifest CI test failed :red_circle: -- Please check the \`cloud-automation\` repo for any regressions.\", \"icon_emoji\": \":bucket:\"}" $(g3kubectl get configmap global -o jsonpath={.data.ci_test_notifications_webhook})
 else
   echo "The test was successful!"
-  curl -X POST --data-urlencode "payload="channel\": \"#test-bots\", \"username\": \"bucket-manifest-ci\", \"text\": \"The Bucket Manifest CI test passed :white_check_mark:\", \"icon_emoji\": \":bucket:\"}" $(g3kubectl get configmap global -o jsonpath={.data.ci_test_notifications_webhook})
+  curl -X POST --data-urlencode "payload={\"channel\": \"#test-bots\", \"username\": \"bucket-manifest-ci\", \"text\": \"The Bucket Manifest CI test passed :white_check_mark:\", \"icon_emoji\": \":bucket:\"}" $(g3kubectl get configmap global -o jsonpath={.data.ci_test_notifications_webhook})
 fi
