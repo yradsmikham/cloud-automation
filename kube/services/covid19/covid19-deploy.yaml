@@ -1,0 +1,66 @@
+---
+# covid19 deployment - only for testing
+# normally use tube via: gen3 job run etl
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: covid19-deployment
+spec:
+  selector:
+    # Only select pods based on the 'app' label
+    matchLabels:
+      app: covid19
+  revisionHistoryLimit: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: covid19
+        netnolimit: "yes"
+        GEN3_DATE_LABEL
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - covid19
+              topologyKey: "kubernetes.io/hostname"
+      automountServiceAccountToken: false
+      containers:
+        - name: covid19
+        imagePullPolicy: Always
+        GEN3_COVID19-ETL_IMAGE
+        env:
+        - name: ACCESS_TOKEN
+            GEN3_ACCESS_TOKEN|-value: ""-|
+        - name: doSlack
+            GEN3_DO_SLACK|-value: "true"-|
+        - name: gen3Env
+            valueFrom:
+            configMapKeyRef:
+                name: manifest-global
+                key: hostname
+        - name: slackWebHook
+            valueFrom:
+            configMapKeyRef:
+                name: global
+                key: slack_webhook
+        resources:
+            limits:
+            cpu: 0.5
+            memory: 512Mi
+        command: ["/bin/bash" ]
+        args:
+            - "-c"
+            - |
+                while true; do sleep 5; done
