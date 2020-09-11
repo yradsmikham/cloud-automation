@@ -38,6 +38,11 @@ resource "aws_iam_role_policy_attachment" "bucket_write" {
   role       = "${aws_iam_role.eks_control_plane_role.name}"
 }
 
+resource "aws_iam_role_policy_attachment" "eks-node-AmazonInspector" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonInspectorFullAccess"
+  role       = "${aws_iam_role.eks_node_role.name}"
+}
+
 
 
 ###############################################
