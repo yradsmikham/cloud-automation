@@ -55,6 +55,7 @@ fi
 
 function install_basics(){
   apt -y install atop
+  curl -s https://inspector-agent.amazonaws.com/linux/latest/install | bash
 }
 
 function install_docker(){
