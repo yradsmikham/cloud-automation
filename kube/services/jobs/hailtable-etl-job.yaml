@@ -1,0 +1,37 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: hailtable-exome-etl
+spec:
+  backoffLimit: 0
+  template:
+    metadata:
+      labels:
+        app: gen3job
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: hailtable-etl
+        imagePullPolicy: Always
+        GEN3_HAILTABLE-ETL_IMAGE
+        env:
+        - name: ES_URL
+          value: esproxy-service
+        - name: JOB_NAME
+          GEN3_JOB_NAME|-value: ""-|
+        - name: S3_BUCKET
+          GEN3_S3_BUCKET|-value: ""-|
+        - name: slackWebHook
+          valueFrom:
+            configMapKeyRef:
+              name: global
+              key: slack_webhook
+        resources:
+          limits:
+            cpu: 1
+            memory: 12Gi
+        command: ["/bin/bash" ]
+        args:
+          - |
+            aws s3 cp s3://$S3_BUCKET/exome.ht . --recursive
+            python3 ./hailtable-etl/hail_to_es.py ./exome.ht $ES_URL gnomad_exomes_2_1_1 --id-field variant_id
