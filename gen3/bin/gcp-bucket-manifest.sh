@@ -68,7 +68,7 @@ gen3_create_google_dataflow() {
   virtualenv venv
   source venv/bin/activate
   git clone https://github.com/uc-cdis/google-bucket-manifest && cd google-bucket-manifest
-  pip install -r requirements.txt
+  pip install -r requirements.txt --use-feature=2020-resolver
 
   # Build a template
   python bucket_manifest_pipeline.py --runner DataflowRunner  --project "$project" --bucket "$bucket" --temp_location gs://"$temp_bucket"/temp  --template_location gs://"$temp_bucket"/templates/pipeline_template --region us-central1 --setup_file ./setup.py --service_account_email "${service_account}"
