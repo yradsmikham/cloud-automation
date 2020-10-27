@@ -234,6 +234,12 @@ else
   gen3_log_info "not deploying portal - no manifest entry for .versions.portal"
 fi
 
+if g3k_manifest_lookup .versions.mariner > /dev/null 2>&1; then
+  gen3 kube-setup-mariner
+else
+  gen3_log_info "not deploying mariner - no manifest entry for .versions.mariner"
+fi
+
 gen3_log_info "enable network policy"
 gen3 kube-setup-networkpolicy "enable" || true
 
