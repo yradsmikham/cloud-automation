@@ -32,6 +32,8 @@ spec:
           value: "5"
         - name: NODE_MAX_INSTANCES
           value: "3"
+        - name: SE_OPTS
+          value: "-timeout 600" 
         image: selenium/node-chrome:4
         imagePullPolicy: Always
         name: node-chrome
