@@ -3,6 +3,8 @@ provider "azurerm" {
   client_id = "${var.azure_client_id}"
   client_secret = "${var.azure_client_secret}"
   tenant_id = "${var.azure_tenant_id}"
+  version = "=2.0.0"
+  features {}
 }
 
 resource "azurerm_virtual_network" "main" {
@@ -63,10 +65,10 @@ resource "azurerm_network_security_group" "loginnode" {
     description = "security group that only allow internal tcp traffics"
     direction = "Inbound"
     priority = 200
-    access = "Allow" 
+    access = "Allow"
     protocol = "TCP"
     source_port_range = "*"
-    destination_port_range = "*" 
+    destination_port_range = "*"
     source_address_prefix = "172.16.0.0/16"
     destination_address_prefix = "172.16.0.0/16"
   }
@@ -208,21 +210,21 @@ resource "azurerm_public_ip" "nat" {
   name = "natip"
   resource_group_name = "${var.azure_resource_group_name}"
   location = "${var.azure_region}"
-  public_ip_address_allocation = "Static"
+  allocation_method = "Static"
 }
 
 resource "azurerm_public_ip" "login" {
   name = "loginip"
   resource_group_name = "${var.azure_resource_group_name}"
   location = "${var.azure_region}"
-  public_ip_address_allocation = "Static"
+  allocation_method = "Static"
 }
 
 resource "azurerm_public_ip" "revproxy" {
   name = "revproxyip"
   resource_group_name = "${var.azure_resource_group_name}"
   location = "${var.azure_region}"
-  public_ip_address_allocation = "Static"
+  allocation_method = "Static"
 }
 
 resource "azurerm_route_table" "private" {
@@ -252,7 +254,12 @@ resource "azurerm_subnet" "public" {
   resource_group_name = "${var.azure_resource_group_name}"
   virtual_network_name = "${azurerm_virtual_network.main.name}"
   address_prefix = "172.16.0.0/24"
-  route_table_id = "${azurerm_route_table.public.id}"
+  # route_table_association = "${azurerm_route_table.public.id}"
+}
+
+resource "azurerm_subnet_route_table_association" "public" {
+  subnet_id      = azurerm_subnet.public.id
+  route_table_id = azurerm_route_table.public.id
 }
 
 resource "azurerm_subnet" "public_kube" {
@@ -260,7 +267,12 @@ resource "azurerm_subnet" "public_kube" {
   resource_group_name = "${var.azure_resource_group_name}"
   virtual_network_name = "${azurerm_virtual_network.main.name}"
   address_prefix = "172.16.1.0/24"
-  route_table_id = "${azurerm_route_table.public.id}"
+  #route_table_association = "${azurerm_route_table.public.id}"
+}
+
+resource "azurerm_subnet_route_table_association" "public_kube" {
+  subnet_id      = azurerm_subnet.public_kube.id
+  route_table_id = azurerm_route_table.public.id
 }
 
 resource "azurerm_subnet" "private" {
@@ -268,7 +280,12 @@ resource "azurerm_subnet" "private" {
   resource_group_name = "${var.azure_resource_group_name}"
   virtual_network_name = "${azurerm_virtual_network.main.name}"
   address_prefix = "172.16.16.0/20"
-  route_table_id = "${azurerm_route_table.private.id}"
+  #route_table_association = "${azurerm_route_table.private.id}"
+}
+
+resource "azurerm_subnet_route_table_association" "private" {
+  subnet_id      = azurerm_subnet.private.id
+  route_table_id = azurerm_route_table.private.id
 }
 
 resource "azurerm_subnet" "private_2" {
@@ -276,7 +293,12 @@ resource "azurerm_subnet" "private_2" {
   resource_group_name = "${var.azure_resource_group_name}"
   virtual_network_name = "${azurerm_virtual_network.main.name}"
   address_prefix = "172.16.4.0/22"
-  route_table_id = "${azurerm_route_table.private_2.id}"
+  #route_table_association = "${azurerm_route_table.private_2.id}"
+}
+
+resource "azurerm_subnet_route_table_association" "private_2" {
+  subnet_id      = azurerm_subnet.private_2.id
+  route_table_id = azurerm_route_table.private_2.id
 }
 
 resource "azurerm_subnet" "private_3" {
@@ -290,7 +312,7 @@ resource "azurerm_network_interface" "public" {
   name = "public"
   resource_group_name = "${var.azure_resource_group_name}"
   location = "${var.azure_region}"
-  network_security_group_id = "${azurerm_network_security_group.loginnode.id}"
+  #network_security_group_id = "${azurerm_network_security_group.loginnode.id}"
   internal_dns_name_label = "headnode"
   ip_configuration {
     name = "publicinterface"
@@ -298,6 +320,11 @@ resource "azurerm_network_interface" "public" {
     private_ip_address_allocation = "dynamic"
     public_ip_address_id = "${azurerm_public_ip.login.id}"
   }
+}
+
+resource "azurerm_network_interface_security_group_association" "public" {
+  network_interface_id      = azurerm_network_interface.public.id
+  network_security_group_id = azurerm_network_security_group.loginnode.id
 }
 
 resource "azurerm_network_interface" "kp" {
@@ -317,7 +344,7 @@ resource "azurerm_network_interface" "cloudproxy" {
   resource_group_name = "${var.azure_resource_group_name}"
   location = "${var.azure_region}"
   internal_dns_name_label = "cloud-proxy"
-  network_security_group_id = "${azurerm_network_security_group.cloudproxy.id}"
+  #network_security_group_id = "${azurerm_network_security_group.cloudproxy.id}"
   ip_configuration {
     name = "cloudproxyinterface"
     subnet_id = "${azurerm_subnet.public.id}"
@@ -326,18 +353,28 @@ resource "azurerm_network_interface" "cloudproxy" {
   }
 }
 
+resource "azurerm_network_interface_security_group_association" "cloudproxy" {
+  network_interface_id      = azurerm_network_interface.cloudproxy.id
+  network_security_group_id = azurerm_network_security_group.cloudproxy.id
+}
+
 resource "azurerm_network_interface" "revproxy" {
   name = "nicrevproxy"
   resource_group_name = "${var.azure_resource_group_name}"
   location = "${var.azure_region}"
   internal_dns_name_label = "rev-proxy"
-  network_security_group_id = "${azurerm_network_security_group.webservice.id}"
+  #network_security_group_id = "${azurerm_network_security_group.webservice.id}"
   ip_configuration {
     name = "cloudproxyinterface"
     subnet_id = "${azurerm_subnet.public.id}"
     private_ip_address_allocation = "dynamic"
     public_ip_address_id = "${azurerm_public_ip.revproxy.id}"
   }
+}
+
+resource "azurerm_network_interface_security_group_association" "revproxy" {
+  network_interface_id      = azurerm_network_interface.revproxy.id
+  network_security_group_id = azurerm_network_security_group.webservice.id
 }
 
 resource "azurerm_virtual_machine" "login" {
@@ -348,7 +385,11 @@ resource "azurerm_virtual_machine" "login" {
   primary_network_interface_id = "${azurerm_network_interface.public.id}"
   network_interface_ids = ["${azurerm_network_interface.public.id}"]
   storage_image_reference {
-    id = "${var.login_ami}"
+    // id = "${var.login_ami}"
+    publisher = "Canonical"
+    offer     = "UbuntuServer"
+    sku       = "16.04-LTS"
+    version   = "latest"
   }
   storage_os_disk {
     name = "logindisk1"
@@ -369,7 +410,11 @@ resource "azurerm_virtual_machine" "kube_provisioner" {
   vm_size = "Standard_A0"
   network_interface_ids = ["${azurerm_network_interface.kp.id}"]
   storage_image_reference {
-    id = "${var.login_ami}"
+    // id = "${var.login_ami}"
+    publisher = "Canonical"
+    offer     = "UbuntuServer"
+    sku       = "16.04-LTS"
+    version   = "latest"
   }
   storage_os_disk {
     name = "kubeprovdisk1"
@@ -390,7 +435,11 @@ resource "azurerm_virtual_machine" "proxy" {
   vm_size = "Standard_A0"
   network_interface_ids = ["${azurerm_network_interface.cloudproxy.id}"]
   storage_image_reference {
-    id = "${var.proxy_ami}"
+    //id = "${var.proxy_ami}"
+    publisher = "Canonical"
+    offer     = "UbuntuServer"
+    sku       = "16.04-LTS"
+    version   = "latest"
   }
   storage_os_disk {
     name = "cloudproxydisk1"
@@ -411,7 +460,11 @@ resource "azurerm_virtual_machine" "revproxy" {
   vm_size = "Standard_A0"
   network_interface_ids = ["${azurerm_network_interface.revproxy.id}"]
   storage_image_reference {
-    id = "${var.login_ami}"
+    //id = "${var.login_ami}"
+    publisher = "Canonical"
+    offer     = "UbuntuServer"
+    sku       = "16.04-LTS"
+    version   = "latest"
   }
   storage_os_disk {
     name = "revproxydisk1"
@@ -429,15 +482,15 @@ resource "azurerm_postgresql_server" "userapi" {
   name = "userapi-db"
   resource_group_name = "${var.azure_resource_group_name}"
   location = "${var.azure_region}"
-  sku {
-    name = "PGSQLB50"
-    capacity = 50
-    tier = "Basic"
+  sku_name = "B_Gen4_1"
+  storage_profile {
+    storage_mb            = 5120
+    backup_retention_days = 7
+    geo_redundant_backup  = "Disabled"
   }
   administrator_login = "userapi_user"
   administrator_login_password = "${var.db_password_userapi}"
   version = "9.6"
-  storage_mb = "51200"
   ssl_enforcement = "Enabled"
 }
 
@@ -445,15 +498,15 @@ resource "azurerm_postgresql_server" "gdcapi" {
   name = "gdbapi-db"
   resource_group_name = "${var.azure_resource_group_name}"
   location = "${var.azure_region}"
-  sku {
-    name = "PGSQLB50"
-    capacity = 50
-    tier = "Basic"
+  sku_name = "B_Gen4_1"
+  storage_profile {
+    storage_mb            = 5120
+    backup_retention_days = 7
+    geo_redundant_backup  = "Disabled"
   }
   administrator_login = "gdcapi_user"
   administrator_login_password = "${var.db_password_gdcapi}"
   version = "9.6"
-  storage_mb = "51200"
   ssl_enforcement = "Enabled"
 }
 
@@ -461,15 +514,15 @@ resource "azurerm_postgresql_server" "indexd" {
   name = "indexd-db"
   resource_group_name = "${var.azure_resource_group_name}"
   location = "${var.azure_region}"
-  sku {
-    name = "PGSQLB50"
-    capacity = 50
-    tier = "Basic"
+  sku_name = "B_Gen4_1"
+  storage_profile {
+    storage_mb            = 5120
+    backup_retention_days = 7
+    geo_redundant_backup  = "Disabled"
   }
   administrator_login = "indexd_user"
   administrator_login_password = "${var.db_password_indexd}"
   version = "9.6"
-  storage_mb = "51200"
   ssl_enforcement = "Enabled"
 }
 
@@ -499,45 +552,45 @@ resource "azurerm_postgresql_firewall_rule" "indexd" {
 
 data "template_file" "kube_up" {
     template = "${file("../configs/kube-up.sh")}"
-    vars {
+    vars = {
         vpc_name = "${var.vpc_name}"
         s3_bucket = "${var.kube_bucket}"
     }
 }
 
 data "template_file" "configmap" {
-    template = "${file("../configs/00configmap.yaml")}"
-    vars {
+    template = "${file("../shared/modules/k8s_configs/00configmap.yaml")}"
+    vars = {
         vpc_name = "${var.vpc_name}"
         hostname = "${var.hostname}"
     }
 }
 
 data "template_file" "kube_services" {
-    template = "${file("../configs/kube-services.sh")}"
-    vars {
+    template = "${file("../shared/modules/k8s_configs/kube-services.sh")}"
+    vars = {
         vpc_name = "${var.vpc_name}"
         s3_bucket = "${var.kube_bucket}"
     }
 }
 
 data "template_file" "reverse_proxy" {
-    template = "${file("../configs/api_reverse_proxy.conf")}"
-    vars {
+    template = "${file("../shared/modules/k8s_configs/api_reverse_proxy.conf")}"
+    vars = {
         hostname = "${var.hostname}"
     }
 }
 
 data "template_file" "reverse_proxy_setup" {
-    template = "${file("../configs/revproxy-setup.sh")}"
-    vars {
+    template = "${file("../shared/modules/k8s_configs/revproxy-setup.sh")}"
+    vars = {
         hostname = "${var.hostname}"
     }
 }
 
 data "template_file" "creds" {
-    template = "${file("../configs/creds.tpl")}"
-    vars {
+    template = "${file("../shared/modules/k8s_configs/creds.tpl")}"
+    vars = {
         userapi_host = "${azurerm_postgresql_server.userapi.fqdn}"
         userapi_user = "${azurerm_postgresql_server.userapi.administrator_login}"
         userapi_pwd = "${azurerm_postgresql_server.userapi.administrator_login_password}"
